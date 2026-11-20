@@ -1,0 +1,13 @@
+@use "@/shared/styles" as *;
+
+.range {
+  @include smaller-than(xs) {
+    width: 100%;
+
+    & > * {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-inline: to-rem(6px);
+    }
+  }
+}

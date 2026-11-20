@@ -1,0 +1,12 @@
+@use "@/shared/styles" as *;
+
+.controls {
+  position: fixed;
+  top: to-rem(16px);
+  right: to-rem(16px);
+  z-index: 10;
+
+  @include smaller-than(md) {
+    position: absolute;
+  }
+}

@@ -1,0 +1,67 @@
+@use "@/shared/styles" as *;
+
+.root {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: to-rem(72px) to-rem(20px) to-rem(20px);
+  background: var(--app-page-bg, var(--mantine-color-body));
+}
+
+.brand {
+  position: absolute;
+  top: to-rem(16px);
+  left: to-rem(20px);
+  z-index: 10;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  min-height: to-rem(34px);
+}
+
+.outlined {
+  padding-inline: calc(var(--button-padding-x) + #{to-rem(2px)});
+}
+
+.inner {
+  width: 100%;
+  max-width: to-rem(640px);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: to-rem(10px);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: to-rem(150px) minmax(0, 1fr);
+  gap: to-rem(12px);
+
+  @include smaller-than(xs) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.actions {
+  @include smaller-than(xs) {
+    flex-direction: column;
+    align-items: stretch;
+
+    & > * {
+      height: auto;
+      min-height: var(--button-height);
+      padding-block: to-rem(6px);
+      white-space: normal;
+    }
+
+    :global(.mantine-Button-label) {
+      white-space: normal;
+      text-align: center;
+    }
+  }
+}

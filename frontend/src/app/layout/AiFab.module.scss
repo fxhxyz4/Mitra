@@ -1,0 +1,115 @@
+@use "@/shared/styles" as *;
+
+.fab {
+  --fab-ai: linear-gradient(135deg, #6d5dfc 0%, #b65cf0 55%, #ff6fae 100%);
+  --fab-bg: var(--mantine-color-text);
+  --fab-fg: var(--mantine-color-body);
+
+  position: fixed;
+  right: max(to-rem(20px), env(safe-area-inset-right));
+  bottom: max(to-rem(20px), env(safe-area-inset-bottom));
+  z-index: 150;
+  display: inline-flex;
+  align-items: center;
+  gap: to-rem(10px);
+  padding: to-rem(5px) to-rem(18px) to-rem(5px) to-rem(5px);
+  border: to-rem(1.5px) solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--fab-bg), var(--fab-bg)) padding-box,
+    var(--fab-ai) border-box;
+  color: var(--fab-fg);
+  font: inherit;
+  cursor: pointer;
+  box-shadow:
+    0 to-rem(8px) to-rem(24px) rgb(0 0 0 / 0.22),
+    0 to-rem(2px) to-rem(6px) rgb(0 0 0 / 0.12);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 150ms ease;
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 to-rem(10px) to-rem(30px) rgb(124 92 255 / 0.35),
+        0 to-rem(2px) to-rem(6px) rgb(0 0 0 / 0.12);
+
+      .icon svg {
+        transform: rotate(18deg) scale(1.08);
+      }
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #b65cf0;
+    outline-offset: 3px;
+  }
+
+  &[data-hidden] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @include dark {
+    --fab-bg: color-mix(in srgb, var(--mantine-color-text) 94%, var(--mantine-color-body));
+    box-shadow:
+      0 to-rem(8px) to-rem(24px) rgb(0 0 0 / 0.5),
+      0 0 0 to-rem(4px) rgb(182 92 240 / 0.12);
+  }
+
+  @include smaller-than(xs) {
+    right: to-rem(12px);
+    bottom: to-rem(12px);
+    gap: to-rem(8px);
+    padding-right: to-rem(14px);
+  }
+}
+
+.icon {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: to-rem(34px);
+  height: to-rem(34px);
+  border-radius: 50%;
+  color: #fff;
+  background: var(--fab-ai);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25);
+
+  svg {
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
+    transition: transform 250ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @include smaller-than(xs) {
+    width: to-rem(30px);
+    height: to-rem(30px);
+  }
+}
+
+.label {
+  font-family: "Unbounded Variable", var(--mantine-font-family);
+  font-size: to-rem(13px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+
+  @include smaller-than(xs) {
+    font-size: to-rem(12px);
+  }
+}
+
+.ai {
+  background: var(--fab-ai);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

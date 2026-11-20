@@ -1,0 +1,257 @@
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  background: var(--app-page-bg, var(--mantine-color-body));
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--mantine-color-brand-2);
+  color: var(--mantine-color-brand-9);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.fade-up {
+  animation: fade-up 400ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.stagger > * {
+  animation: fade-up 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+.hover-lift {
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--mantine-shadow-md);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-app-preset="gradient"] .mantine-Card-root {
+  background-color: var(--app-card-bg);
+  border-color: var(--app-card-border);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  backdrop-filter: saturate(160%) blur(14px);
+}
+
+[data-app-preset="pastel"] .app-kpi {
+  background-image: linear-gradient(135deg, var(--kpi-tint) 0%, transparent 85%);
+}
+
+.mantine-Switch-input:checked:not(:disabled) + * > .mantine-Switch-thumb {
+  --switch-thumb-bg: var(--mantine-primary-color-contrast);
+}
+
+:root {
+  --app-scrollbar-thumb: color-mix(in srgb, var(--mantine-primary-color-filled) 28%, transparent);
+  --app-scrollbar-thumb-hover: color-mix(in srgb, var(--mantine-primary-color-filled) 55%, transparent);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--app-scrollbar-thumb);
+  background-clip: padding-box;
+
+  &:hover {
+    background-color: var(--app-scrollbar-thumb-hover);
+  }
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--app-scrollbar-thumb) transparent;
+  }
+}
+
+.mantine-ScrollArea-thumb {
+  background-color: var(--app-scrollbar-thumb);
+
+  &:hover {
+    background-color: var(--app-scrollbar-thumb-hover);
+  }
+}
+
+.app-hint-target {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 3px;
+  border-radius: 2px;
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: 2px;
+  }
+}
+
+.app-hint {
+  --app-hint-bg: color-mix(in srgb, var(--mantine-color-body) 92%, var(--mantine-primary-color-filled));
+
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 30%, var(--mantine-color-default-border));
+  border-radius: var(--mantine-radius-md);
+  background: var(--app-hint-bg);
+  color: var(--mantine-color-text);
+  box-shadow: var(--mantine-shadow-md);
+  font-size: var(--mantine-font-size-xs);
+  line-height: 1.45;
+  text-align: left;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.app-hint-arrow {
+  background: var(--app-hint-bg);
+}
+
+.app-hint-formula {
+  margin-bottom: 4px;
+  font-family: var(--mantine-font-family-monospace);
+  font-weight: 600;
+  color: var(--mantine-primary-color-filled);
+}
+
+.mantine-SegmentedControl-root {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.mantine-Tabs-list {
+  @media (max-width: 29.99em) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mantine-Tabs-tab {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.app-kpi {
+  container-type: inline-size;
+}
+
+@container (max-width: 190px) {
+  .app-kpi .mantine-ThemeIcon-root {
+    display: none;
+  }
+}
+
+@media (max-width: 29.99em) {
+  .app-kpi {
+    padding: var(--mantine-spacing-md) !important;
+  }
+}
+
+.app-strong-link {
+  color: color-mix(in srgb, var(--mantine-color-anchor) 35%, var(--mantine-color-text));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--mantine-color-text);
+      text-decoration-color: currentColor;
+    }
+  }
+}
+
+.app-no-select,
+button,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="img"],
+svg,
+img,
+label,
+.mantine-Badge-root,
+.mantine-NavLink-root,
+.mantine-SegmentedControl-root,
+.mantine-Tabs-tab,
+.mantine-Menu-item,
+.mantine-Menu-label,
+.mantine-Chip-root,
+.mantine-Switch-root,
+.mantine-Checkbox-root,
+.mantine-Radio-root,
+.mantine-Avatar-root,
+.mantine-ThemeIcon-root,
+.mantine-Burger-root,
+.mantine-Dropzone-root,
+.mantine-Table-th,
+.recharts-legend-wrapper,
+.recharts-cartesian-axis-tick,
+.recharts-polar-angle-axis-tick,
+.recharts-text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.app-no-select {
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+}

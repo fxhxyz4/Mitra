@@ -1,0 +1,3 @@
+cd frontend
+node scripts/check-branch.mjs
+npx lint-staged

@@ -1,0 +1,88 @@
+@use "@/shared/styles" as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: to-rem(28px) repeat(4, minmax(0, 1fr));
+  gap: to-rem(6px);
+}
+
+.axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  color: var(--mantine-color-dimmed);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: to-rem(4px);
+  min-height: to-rem(76px);
+  padding: to-rem(6px);
+  border-radius: var(--mantine-radius-sm);
+  border: 1px solid transparent;
+
+  &[data-level="CRITICAL"] {
+    --level-color: var(--mantine-color-grape-filled);
+    background: var(--mantine-color-grape-light);
+    border-color: var(--mantine-color-grape-light-hover);
+  }
+
+  &[data-level="HIGH"] {
+    --level-color: var(--mantine-color-danger-filled);
+    background: var(--mantine-color-danger-light);
+    border-color: var(--mantine-color-danger-light-hover);
+  }
+
+  &[data-level="MEDIUM"] {
+    --level-color: var(--mantine-color-warning-filled);
+    background: var(--mantine-color-warning-light);
+    border-color: var(--mantine-color-warning-light-hover);
+  }
+
+  &[data-level="LOW"] {
+    --level-color: var(--mantine-color-success-filled);
+    background: var(--mantine-color-success-light);
+    border-color: var(--mantine-color-success-light-hover);
+  }
+
+  // Темна тема: «-light» відтінки там насичені й глушать коди ризиків — лише легкий тон рівня поверх фону
+  // `&[data-level]` — та сама специфічність, що й у правил рівня вище (`:where()` її не додає), тож перекриває їх
+  @include dark {
+    &[data-level] {
+      background: color-mix(in srgb, var(--level-color) 22%, var(--mantine-color-body));
+      border-color: color-mix(in srgb, var(--level-color) 45%, var(--mantine-color-body));
+    }
+  }
+}
+
+.score {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: to-rem(4px);
+}
+
+.chip {
+  cursor: pointer;
+}
+
+// Код ризику: нейтральний фон, колір і рамка — вердикт; пунктир — попередній висновок.
+// Читається на будь-якій клітинці в обох темах (варіанти filled/outline у темній темі втрачають колір).
+// --chip-color — `--mantine-color-<колір>-text`: Mantine підбирає його читабельним окремо для світлої й темної теми.
+.badge {
+  background: var(--mantine-color-body);
+  color: var(--chip-color);
+  border: to-rem(1.5px) solid var(--chip-color);
+
+  &[data-preliminary] {
+    border-style: dashed;
+  }
+}

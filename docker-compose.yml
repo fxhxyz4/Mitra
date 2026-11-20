@@ -1,0 +1,117 @@
+services:
+  ollama:
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    build: ./ollama
+    profiles: ["ollama"]
+    environment:
+      OLLAMA_PULL: ${OLLAMA_MODEL:-gemma3:4b} ${EMBED_MODEL:-bge-m3}
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-30m}
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "127.0.0.1:11434:11434"
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/ready"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30m
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      OLLAMA_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-gemma3:4b}
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-30m}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0}
+      LLM_SEED: ${LLM_SEED:-42}
+      AI_ENABLED: ${AI_ENABLED:-true}
+      AI_MAX_UPLOAD_MB: ${AI_MAX_UPLOAD_MB:-10}
+      EMBED_MODEL: ${EMBED_MODEL:-bge-m3}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      DEMO_DATASET: ${DEMO_DATASET:-true}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      DEMO_TOKEN_SECRET: ${DEMO_TOKEN_SECRET:-}
+      DEMO_LOGIN: ${DEMO_LOGIN:-false}
+      IMPORT_FILE: ${IMPORT_FILE:-}
+      ADMIN_GRANT_HASH: ${ADMIN_GRANT_HASH:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:4173}
+      LLM_TIMEOUT: ${LLM_TIMEOUT:-300}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-2048}
+      NOTIFY_MAX_AGE_DAYS: ${NOTIFY_MAX_AGE_DAYS:-2}
+      REMINDER_DAYS: ${REMINDER_DAYS:-7,3,1}
+      DEMO_TODAY: ${DEMO_TODAY:-}
+      TIMEZONE: ${TIMEZONE:-Europe/Kyiv}
+      SESSION_HOURS: ${SESSION_HOURS:-12}
+      SESSION_MAX_DAYS: ${SESSION_MAX_DAYS:-7}
+      TOKEN_DAYS: ${TOKEN_DAYS:-90}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env (see .env.example)}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-true}
+      LLM_CACHE_DAYS: ${LLM_CACHE_DAYS:-7}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-noreply@example.org}
+      NOTIFY_INTERVAL_MINUTES: ${NOTIFY_INTERVAL_MINUTES:-15}
+      SITE_URL: ${SITE_URL:-http://localhost}
+      REPORT_SECRET: ${REPORT_SECRET:-}
+      INTEGRA_URL: ${INTEGRA_URL:-}
+      INTEGRA_API_KEY: ${INTEGRA_API_KEY:-}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-app}
+      STORAGE_DIR: /data/uploads/evidence
+    volumes:
+      - uploads:/data/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_SITE_URL: ${SITE_URL:-http://localhost}
+    ports:
+      - "0.0.0.0:${PORT:-80}:8080"
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+  uploads:
+  ollama-data:

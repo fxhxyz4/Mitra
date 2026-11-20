@@ -1,0 +1,27 @@
+@use "@/shared/styles" as *;
+
+.demo {
+  display: flex;
+  align-items: center;
+  gap: to-rem(10px);
+  padding: to-rem(10px) to-rem(12px);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  transition:
+    border-color 120ms ease,
+    background 120ms ease;
+
+  @include hover {
+    border-color: var(--mantine-primary-color-filled);
+    background: var(--mantine-color-default-hover);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.demoName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

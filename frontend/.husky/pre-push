@@ -1,0 +1,4 @@
+cd frontend
+node scripts/check-branch.mjs
+npm run typecheck
+npm run test

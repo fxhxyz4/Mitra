@@ -1,0 +1,51 @@
+@use "@/shared/styles" as *;
+
+.root {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding: to-rem(24px);
+  background: var(--app-page-bg, var(--mantine-color-body));
+
+  @include smaller-than(md) {
+    align-items: flex-start;
+    padding: to-rem(72px) to-rem(16px) to-rem(24px);
+  }
+}
+
+.inner {
+  width: 100%;
+  max-width: to-rem(1200px);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: to-rem(48px);
+  align-items: center;
+
+  @include smaller-than(md) {
+    grid-template-columns: 1fr;
+    gap: to-rem(24px);
+  }
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  line-height: 1.15;
+}
+
+.points {
+  @include smaller-than(md) {
+    display: none;
+  }
+}
+
+.lead {
+  @include smaller-than(xs) {
+    display: none;
+  }
+}
+
+.card {
+  width: 100%;
+  max-width: to-rem(480px);
+}

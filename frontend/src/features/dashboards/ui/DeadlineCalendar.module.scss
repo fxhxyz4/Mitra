@@ -1,0 +1,78 @@
+@use "@/shared/styles" as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid var(--mantine-color-default-border);
+  border-left: 1px solid var(--mantine-color-default-border);
+}
+
+.head {
+  padding: to-rem(6px) to-rem(8px);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  border-right: 1px solid var(--mantine-color-default-border);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.day {
+  min-height: to-rem(104px);
+  padding: to-rem(6px);
+  border-right: 1px solid var(--mantine-color-default-border);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+  display: flex;
+  flex-direction: column;
+  gap: to-rem(4px);
+  min-width: 0;
+
+  &[data-outside] {
+    background: var(--mantine-color-default-hover);
+    opacity: 0.75;
+  }
+
+  &[data-today] .num {
+    background: var(--mantine-primary-color-filled);
+    color: var(--mantine-primary-color-contrast);
+  }
+
+  @include smaller-than(md) {
+    min-height: to-rem(64px);
+  }
+}
+
+.num {
+  align-self: flex-start;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  border-radius: var(--mantine-radius-xl);
+  padding: 0 to-rem(6px);
+  line-height: to-rem(20px);
+}
+
+.item {
+  display: block;
+  padding: to-rem(2px) to-rem(6px);
+  border-radius: var(--mantine-radius-sm);
+  font-size: to-rem(11px);
+  line-height: to-rem(20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  color: var(--mantine-color-text);
+  background: var(--item-bg);
+  border-left: 3px solid var(--item-color);
+
+  @include smaller-than(md) {
+    font-size: to-rem(10px);
+    padding: to-rem(1px) to-rem(3px);
+  }
+}
+
+.agenda {
+  @include larger-than(md) {
+    display: none;
+  }
+}

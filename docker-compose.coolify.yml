@@ -1,0 +1,76 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: mitra
+      POSTGRES_USER: ${SERVICE_USER_POSTGRES}
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 512m
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      SITE_URL: ${SITE_URL:?https://<name>.example.org}
+      CORS_ORIGINS: ${SITE_URL}
+      DATABASE_URL: postgresql+asyncpg://${SERVICE_USER_POSTGRES}:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/mitra
+      STORAGE_DIR: /data/uploads/evidence
+      LLM_BASE_URL: ${LLM_BASE_URL}
+      LLM_MODEL: ${LLM_MODEL}
+      LLM_API_KEY: ${LLM_API_KEY}
+      EMBED_MODEL: ${EMBED_MODEL}
+      AI_ENABLED: ${AI_ENABLED:?true or false}
+      LLM_TIMEOUT: 300
+      LLM_MAX_TOKENS: 2048
+      LLM_TEMPERATURE: 0
+      LLM_SEED: 42
+      DEMO_DATASET: ${DEMO_DATASET:?true or false}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:?true or false}
+      DEMO_LOGIN: ${DEMO_LOGIN:?true or false}
+      DEMO_TOKEN_SECRET: ${SERVICE_PASSWORD_DEMOTOKEN}
+      REPORT_SECRET: ${SERVICE_PASSWORD_REPORT}
+      SESSION_SECRET: ${SERVICE_PASSWORD_SESSION}
+      ADMIN_GRANT_HASH: ${ADMIN_GRANT_HASH}
+      DEMO_TODAY: ${DEMO_TODAY}
+      INTEGRA_URL: ${INTEGRA_URL}
+      INTEGRA_API_KEY: ${INTEGRA_API_KEY}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - uploads:/data/uploads
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    mem_limit: 768m
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_SITE_URL: ${SITE_URL}
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    mem_limit: 128m
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+  uploads:
